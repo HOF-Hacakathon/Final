@@ -1498,5 +1498,11 @@ def execute_action(service, analysis):
         return f"Error executing action: {str(e)}"
 
 if __name__ == '__main__':
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # Local development only
-    app.run(host='localhost', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    if os.environ.get('RENDER') or os.environ.get('PRODUCTION'):
+        # Production settings (Render)
+        app.run(host='0.0.0.0', port=port)
+    else:
+        # Local development settings
+        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # Local development only
+        app.run(host='localhost', port=port, debug=True)
