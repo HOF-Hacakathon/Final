@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-hover: #14b8a6;
+            --primary-light: #f0fdfa;
+            --primary-very-light: #f0fdf9;
+            --white: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: var(--primary) !important;
+            padding: 0.8rem 0;
+            margin: 0;
+        }
+
+        .navbar-brand {
+            color: var(--white) !important;
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        .nav-link {
+            color: var(--white) !important;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.2s;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .search-container {
+            grid-column: 1 / -1;
+            margin: 0 0 2rem 0;
+            padding: 1.5rem;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(13, 148, 136, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-container:focus-within {
+            box-shadow: 0 6px 12px rgba(13, 148, 136, 0.15);
+        }
+
+        .email-section {
+            grid-column: 1;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .deletion-section {
+            grid-column: 2;
+            background: var(--primary-very-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(13, 148, 136, 0.1);
+            align-self: start;
+            position: sticky;
+            top: 2rem;
+            border: 1px solid rgba(13, 148, 136, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .deletion-section:hover {
+            box-shadow: 0 6px 12px rgba(13, 148, 136, 0.15);
+        }
+
+        .deletion-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .deletion-title h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+            opacity: 0.95;
+        }
+
+        .deletion-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .deletion-category {
+            background: var(--white);
+            color: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+            transform-origin: center;
+        }
+
+        .deletion-category:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .deletion-category.active {
+            background: var(--primary);
+            color: var(--white);
+            transform: scale(1.02);
+        }
+
+        .deletion-count {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            min-width: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .deletion-category.active .deletion-count,
+        .deletion-category:hover .deletion-count {
+            background: var(--white);
+            color: var(--primary);
+        }
+
+        .delete-btn {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(13, 148, 136, 0.2);
+        }
+
+        .delete-btn.show {
+            display: inline-flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(13, 148, 136, 0.25);
+        }
+
+        .delete-btn:disabled {
+            background: var(--primary-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .email-card {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            padding-left: 3rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .email-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .email-subject {
+            color: var(--primary);
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .email-from, .email-date {
+            overflow-wrap: break-word;
+            word-break: break-word;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .email-summary {
+            color: #5f6368;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+
+        .email-details {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e8eaed;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .email-details.active {
+            display: block;
+        }
+
+        .bullet-points {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--primary-very-light);
+            border-radius: 8px;
+            border: 1px solid rgba(13, 148, 136, 0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--primary-very-light);
+            box-sizing: border-box;
+        }
+
+        .bullet-points::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .bullet-points::-webkit-scrollbar-track {
+            background: var(--primary-very-light);
+        }
+
+        .bullet-points::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .bullet-points li {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            box-sizing: border-box;
+        }
+
+        .reply-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid rgba(13, 148, 136, 0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .reply-textarea {
+            width: 100%;
+            min-height: 100px;
+            max-height: 200px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid var(--primary-light);
+            border-radius: 8px;
+            font-family: inherit;
+            resize: vertical;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f1f3f4;
+            color: #3c4043;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-light);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .summary-loading {
+            padding: 1rem;
+            background: var(--primary-very-light);
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .selection-info {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: var(--primary-very-light);
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .selection-info.show {
+            display: block;
+        }
+
+        .material-icons {
+            font-size: 18px;
+        }
+        
+        .ner-entity {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 0.1em 0.2em;
+            border-radius: 3px;
+            cursor: help;
+            position: relative;
+        }
+        
+        .ner-entity:hover::after {
+            content: attr(data-entity-type);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.3em 0.6em;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            z-index: 1;
+        }
+        
+        .full-email-content {
+            display: none;
+            padding: 1.2rem;
+            background: var(--primary-very-light);
+            border-radius: 8px;
+            margin-top: 1rem;
+            height: 200px;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: pre-wrap;
+            border: 1px solid rgba(13, 148, 136, 0.1);
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--primary-very-light);
+            width: 100%;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-sizing: border-box;
+        }
+
+        .full-email-content * {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            box-sizing: border-box;
+        }
+
+        .full-email-content a {
+            word-break: break-all;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .full-email-content.active {
+            display: block;
+        }
+
+        .ner-content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            width: 100%;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            margin: 0;
+        }
+
+        .email-list {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Force all text content to wrap */
+        .email-subject,
+        .email-from,
+        .email-date,
+        .email-summary,
+        .bullet-points,
+        .ner-content {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Container for long URLs and text */
+        .text-container {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            box-sizing: border-box;
+        }
+
+        .expand-email-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            opacity: 0.9;
+        }
+
+        .expand-email-btn:hover {
+            opacity: 1;
+            color: var(--primary-hover);
+            text-decoration: none;
+            transform: translateX(3px);
+        }
+
+        .expand-email-btn .material-icons {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+
+        .expand-email-btn.active .material-icons {
+            transform: rotate(180deg);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--primary-light);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        .search-button {
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(13, 148, 136, 0.2);
+        }
+
+        .search-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(13, 148, 136, 0.25);
+        }
+
+        .search-results-info {
+            margin-top: 12px;
+            color: var(--text-secondary);
+            font-style: italic;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .ner-entity {
+            background-color: #ffcdd2;
+            padding: 2px 4px;
+            border-radius: 3px;
+            display: inline;
+            white-space: normal;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Checkbox styling */
+        .email-checkbox {
+            position: absolute;
+            left: 1rem;
+            top: 1.5rem;
+            transform: scale(1.2);
+            display: none;
+            accent-color: var(--primary);
+            transition: all 0.2s ease;
+        }
+
+        /* Smooth transitions for email cards when selected */
+        .email-card.selected-for-deletion {
+            background: var(--primary-very-light);
+            border-left: 3px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .email-card.selectable {
+            transition: transform 0.2s ease;
+        }
+
+        .email-card.selectable:hover {
+            transform: translateX(5px);
+        }
+
+        /* Email tag styling */
+        .email-labels {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .topic-label {
+            background: var(--primary-very-light);
+            color: var(--primary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(13, 148, 136, 0.2);
+        }
+
+        .priority-label {
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(13, 148, 136, 0.2);
+        }
+
+        .high-priority {
+            background: rgba(13, 148, 136, 0.15);
+            color: var(--primary);
+            border-color: rgba(13, 148, 136, 0.3);
+        }
+
+        .med-priority {
+            background: rgba(13, 148, 136, 0.1);
+            color: var(--primary);
+            border-color: rgba(13, 148, 136, 0.2);
+        }
+
+        .low-priority {
+            background: rgba(13, 148, 136, 0.05);
+            color: var(--primary);
+            border-color: rgba(13, 148, 136, 0.1);
+        }
+
+        .label {
+            background: var(--primary-very-light);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(13, 148, 136, 0.2);
+        }
+
+        /* Container for the expanded content */
+        .expanded-content-wrapper {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid rgba(13, 148, 136, 0.1);
+        }
+
+
+        .navbar-brand img {
+            height: 35px;
+            width: auto;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/static/images/logo.png" alt="CrunchMail Logo">
+                CrunchMail
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/emails">Emails</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/attachments">Attachments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/voice">Voice Assistant</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="logout-btn" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="search-container">
+            <form action="/search" method="POST" class="search-form">
+                <input type="text" name="query" class="search-input" placeholder="Search emails..." value="{{ search_query or '' }}">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+            {% if search_query %}
+            <div class="search-results-info">
+                Showing results for: "{{ search_query }}"
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="email-section">
+            <div class="email-list">
+                {% if emails %}
+                    {% for email in emails %}
+                        <div class="email-card" 
+                             data-email-id="{{ email.id }}" 
+                             {% if email.deletion_category %}data-deletion-category="{{ email.deletion_category }}"{% endif %}>
+                            <input type="checkbox" class="email-checkbox" aria-label="Select email for deletion">
+                            <h3 class="email-subject">{{ email.subject }}</h3>
+                            <p class="email-from">{{ email.from }}</p>
+                            <p class="email-date">{{ email.date }}</p>
+                            <p class="email-summary">{{ email.short_summary }}</p>
+                            <div class="email-labels">
+                                {% if email.priority_label %}
+                                <span class="priority-label {{ email.priority_label }}">{{ email.priority_label.split('/')[-1].replace('-', ' ').title() }}</span>
+                                {% endif %}
+                                {% if email.deletion_category %}
+                                    <span class="deletion-tag">{{ email.deletion_category.replace('-', ' ').title() }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="email-details">
+                                <h4>Detailed Summary:</h4>
+                                <div class="summary-loading">
+                                    <div class="loading-spinner"></div>
+                                    Loading detailed summary...
+                                </div>
+                                <div class="bullet-points" style="display: none;">
+                                </div>
+                                <div class="reply-section">
+                                    <h4>Reply to Email</h4>
+                                    <textarea class="reply-textarea" placeholder="Loading suggested reply..."></textarea>
+                                    <div class="button-group">
+                                        <button class="btn btn-secondary get-suggestion-btn">Get Suggestion</button>
+                                        <button class="btn btn-primary send-reply-btn">Send Reply</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="expand-email-btn">
+                                <span class="material-icons">expand_more</span>
+                                Show Full Email Content
+                            </button>
+                            <div class="full-email-content">
+                                <div class="loading-spinner"></div>
+                                Loading email content...
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="email-card">
+                        <p>No emails found in your inbox.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="deletion-section">
+            <div class="deletion-title">
+                <h2>Potential Deletion Categories</h2>
+                <button class="delete-btn" id="bulk-delete-btn" disabled>
+                    <span class="material-icons">delete</span>
+                    Delete Selected (<span id="selected-count">0</span>)
+                </button>
+            </div>
+            <div class="selection-info" id="selection-info">
+                Click on individual emails to select/deselect them for deletion
+            </div>
+            <div class="deletion-categories">
+                {% for category in deletion_categories %}
+                    {% set category_name = category.split('/')[-1] %}
+                    <div class="deletion-category" data-category="{{ category_name }}">
+                        {{ category_name.replace('-', ' ').title() }}
+                        <span class="deletion-count">0</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+            const selectionInfo = document.getElementById('selection-info');
+            const selectedCountSpan = document.getElementById('selected-count');
+            let activeCategory = null;
+
+            function updateSelectedCount() {
+                const selectedCount = document.querySelectorAll('.email-card.selected-for-deletion').length;
+                selectedCountSpan.textContent = selectedCount;
+                bulkDeleteBtn.disabled = selectedCount === 0;
+            }
+            
+            // Update deletion category counts
+            function updateDeletionCounts() {
+                document.querySelectorAll('.deletion-category').forEach(category => {
+                    const categoryName = category.dataset.category;
+                    const count = document.querySelectorAll(`.email-card[data-deletion-category="${categoryName}"]`).length;
+                    category.querySelector('.deletion-count').textContent = count;
+                });
+            }
+            
+            // Initial count update
+            updateDeletionCounts();
+            
+            // Handle deletion category clicks
+            document.querySelectorAll('.deletion-category').forEach(category => {
+                category.addEventListener('click', function() {
+                    const categoryName = this.dataset.category;
+                    const wasActive = this.classList.contains('active');
+                    
+                    // Reset all categories and emails
+                    document.querySelectorAll('.deletion-category').forEach(cat => {
+                        cat.classList.remove('active');
+                    });
+                    document.querySelectorAll('.email-card').forEach(email => {
+                        email.classList.remove('selectable', 'selected-for-deletion');
+                    });
+                    
+                    if (!wasActive) {
+                        // Activate this category
+                        this.classList.add('active');
+                        activeCategory = categoryName;
+                        
+                        // Make matching emails selectable
+                        document.querySelectorAll(`.email-card[data-deletion-category="${categoryName}"]`)
+                            .forEach(email => {
+                                email.classList.add('selectable', 'selected-for-deletion');
+                                email.querySelector('.email-checkbox').checked = true;
+                            });
+                            
+                        selectionInfo.classList.add('show');
+                    } else {
+                        activeCategory = null;
+                        selectionInfo.classList.remove('show');
+                    }
+                    
+                    updateSelectedCount();
+                    bulkDeleteBtn.classList.toggle('show', !wasActive);
+                });
+            });
+            
+            // Handle individual email selection
+            document.querySelectorAll('.email-card').forEach(card => {
+                const checkbox = card.querySelector('.email-checkbox');
+                
+                card.addEventListener('click', function(e) {
+                    // Only handle clicks if email is selectable and not clicking on other interactive elements
+                    if (!this.classList.contains('selectable') || 
+                        e.target.classList.contains('btn') || 
+                        e.target.classList.contains('reply-textarea')) {
+                        return;
+                    }
+                    
+                    // Toggle selection
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    this.classList.toggle('selected-for-deletion', checkbox.checked);
+                    updateSelectedCount();
+                });
+            });
+            
+            // Handle bulk delete
+            bulkDeleteBtn.addEventListener('click', async function() {
+                if (!confirm('Are you sure you want to delete these emails? They will be moved to trash.')) {
+                    return;
+                }
+                
+                const selectedEmails = document.querySelectorAll('.email-card.selected-for-deletion');
+                const deletePromises = Array.from(selectedEmails).map(async email => {
+                    const emailId = email.dataset.emailId;
+                    try {
+                        const response = await fetch(`/delete_email/${emailId}`, {
+                            method: 'POST'
+                        });
+                        const data = await response.json();
+                        
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+                        
+                        email.remove();
+                        return true;
+                    } catch (error) {
+                        console.error(`Error deleting email ${emailId}:`, error);
+                        return false;
+                    }
+                });
+                
+                try {
+                    const results = await Promise.all(deletePromises);
+                    const successCount = results.filter(Boolean).length;
+                    alert(`Successfully moved ${successCount} email(s) to trash`);
+                    
+                    // Update counts and reset UI
+                    updateDeletionCounts();
+                    if (activeCategory) {
+                        document.querySelector(`.deletion-category[data-category="${activeCategory}"]`)
+                            .classList.remove('active');
+                    }
+                    activeCategory = null;
+                    selectionInfo.classList.remove('show');
+                    this.classList.remove('show');
+                    this.disabled = true;
+                    selectedCountSpan.textContent = '0';
+                } catch (error) {
+                    alert('Error deleting some emails. Please try again.');
+                }
+            });
+            
+            // Handle email card clicks to expand/collapse
+            document.querySelectorAll('.email-card').forEach(card => {
+                let detailedSummaryLoaded = false;
+                
+                card.addEventListener('click', async function(e) {
+                    // Don't toggle if clicking buttons or textarea
+                    if (e.target.classList.contains('btn') || 
+                        e.target.classList.contains('reply-textarea')) {
+                        return;
+                    }
+                    
+                    const details = this.querySelector('.email-details');
+                    const isExpanding = !details.classList.contains('active');
+                    
+                    details.classList.toggle('active');
+                    
+                    // Load detailed summary if expanding and not already loaded
+                    if (isExpanding && !detailedSummaryLoaded) {
+                        const emailId = this.dataset.emailId;
+                        const summaryLoading = details.querySelector('.summary-loading');
+                        const bulletPoints = details.querySelector('.bullet-points');
+                        
+                        try {
+                            const response = await fetch(`/get_detailed_summary/${emailId}`);
+                            const data = await response.json();
+                            
+                            if (data.error) {
+                                throw new Error(data.error);
+                            }
+                            
+                            bulletPoints.innerHTML = data.detailed_summary;
+                            summaryLoading.style.display = 'none';
+                            bulletPoints.style.display = 'block';
+                            detailedSummaryLoaded = true;
+                        } catch (error) {
+                            summaryLoading.textContent = `Error loading summary: ${error.message}`;
+                        }
+                    }
+                });
+            });
+            
+            // Handle "Get Suggestion" button clicks
+            document.querySelectorAll('.get-suggestion-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const card = this.closest('.email-card');
+                    const emailId = card.dataset.emailId;
+                    const textarea = card.querySelector('.reply-textarea');
+                    const sendBtn = card.querySelector('.send-reply-btn');
+                    
+                    btn.disabled = true;
+                    textarea.value = 'Loading...';
+                    
+                    try {
+                        const response = await fetch(`/generate_reply/${emailId}`);
+                        const data = await response.json();
+                        
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+                        
+                        textarea.value = data.reply;
+                    } catch (error) {
+                        textarea.value = `Error: ${error.message}`;
+                    } finally {
+                        btn.disabled = false;
+                    }
+                });
+            });
+            
+            // Handle "Send Reply" button clicks
+            document.querySelectorAll('.send-reply-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const card = this.closest('.email-card');
+                    const emailId = card.dataset.emailId;
+                    const textarea = card.querySelector('.reply-textarea');
+                    
+                    if (!textarea.value.trim()) {
+                        alert('Please enter a reply message');
+                        return;
+                    }
+                    
+                    btn.disabled = true;
+                    textarea.disabled = true;
+                    
+                    try {
+                        const response = await fetch(`/send_reply/${emailId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                reply_text: textarea.value
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+                        
+                        alert('Reply sent successfully!');
+                        textarea.value = '';
+                    } catch (error) {
+                        alert(`Error sending reply: ${error.message}`);
+                    } finally {
+                        btn.disabled = false;
+                        textarea.disabled = false;
+                    }
+                });
+            });
+            
+            // Handle expand email content button clicks
+            document.querySelectorAll('.expand-email-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const card = this.closest('.email-card');
+                    const emailId = card.dataset.emailId;
+                    const contentDiv = card.querySelector('.full-email-content');
+                    const isExpanding = !contentDiv.classList.contains('active');
+                    
+                    if (isExpanding) {
+                        try {
+                            const response = await fetch(`/get_ner_content/${emailId}`);
+                            const data = await response.json();
+                            
+                            if (data.error) {
+                                throw new Error(data.error);
+                            }
+                            
+                            contentDiv.innerHTML = data.content;
+                        } catch (error) {
+                            contentDiv.innerHTML = `Error loading email content: ${error.message}`;
+                        }
+                    }
+                    
+                    btn.classList.toggle('active');
+                    contentDiv.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

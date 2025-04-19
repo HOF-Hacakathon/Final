@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CrunchMail - Smart Email Management</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-hover: #14b8a6;
+            --primary-light: #f0fdfa;
+            --primary-very-light: #f0fdf9;
+            --white: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-very-light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--primary);
+            padding: 1.2rem 0;
+            box-shadow: 0 2px 10px rgba(13, 148, 136, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .brand-name {
+            color: var(--white);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-container {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(13, 148, 136, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 2rem;
+        }
+
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(13, 148, 136, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .google-btn {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(13, 148, 136, 0.2);
+        }
+
+        .google-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+        }
+
+        .google-logo {
+            width: 24px;
+            height: 24px;
+            background: var(--white);
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        h2 {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/static/images/logo.png" alt="CrunchMail Logo" class="logo">
+                <h1 class="brand-name">CrunchMail</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="login-container">
+            <h2>Welcome to CrunchMail</h2>
+            <p>Your intelligent email management solution</p>
+            <a href="/authorize" class="google-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="google-logo" alt="Google logo">
+                Sign in with Google
+            </a>
+        </div>
+
+        <div class="features-container">
+            <div class="feature-card">
+                <span class="material-icons feature-icon">auto_awesome</span>
+                <h3 class="feature-title">Smart Categorization</h3>
+                <p class="feature-description">Automatically organizes your emails by priority and topics using AI</p>
+            </div>
+            <div class="feature-card">
+                <span class="material-icons feature-icon">psychology</span>
+                <h3 class="feature-title">NER Analysis</h3>
+                <p class="feature-description">Identifies and highlights key entities in your emails for quick scanning</p>
+            </div>
+            <div class="feature-card">
+                <span class="material-icons feature-icon">summarize</span>
+                <h3 class="feature-title">Smart Summaries</h3>
+                <p class="feature-description">Get instant AI-generated summaries of your emails</p>
+            </div>
+            <div class="feature-card">
+                <span class="material-icons feature-icon">auto_delete</span>
+                <h3 class="feature-title">Cleanup Assistant</h3>
+                <p class="feature-description">Identifies and helps manage unwanted emails efficiently</p>
+            </div>
+            <div class="feature-card">
+                <span class="material-icons feature-icon">search</span>
+                <h3 class="feature-title">Semantic Search</h3>
+                <p class="feature-description">Find emails using natural language queries</p>
+            </div>
+            <div class="feature-card">
+                <span class="material-icons feature-icon">smart_button</span>
+                <h3 class="feature-title">Smart Replies</h3>
+                <p class="feature-description">Generate contextual email responses with AI</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
