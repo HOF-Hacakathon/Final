@@ -14,3 +14,4 @@ SpeechRecognition>=3.10.0
 gTTS>=2.3.2
 beautifulsoup4>=4.9.3
 gunicorn
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
